@@ -94,10 +94,22 @@ async function deleteModel(req, res) {
   }
 }
 
+// GET /api/admin/models
+async function getAllModels(req, res) {
+  try {
+    const models = await SystemModel.find().populate('userId', 'email')
+    res.json(models)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+
 module.exports = {
   createModel,
   getModels,
   getModelById,
   updateModel,
-  deleteModel
+  deleteModel,
+  getAllModels
 }
