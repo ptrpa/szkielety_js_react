@@ -1,0 +1,24 @@
+# Node modules
+**/node_modules/
+
+# Logi
+*.log
+
+# Systemowe i edytorowe
+.DS_Store
+Thumbs.db
+
+# Tymczasowe pliki edytora
+*.swp
+*.swo
+
+# Locki i cache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dotenv (na razie nie ignorujemy)
+# .env
+
+# VS Code foldery (opcjonalnie)
+.vscode/
