@@ -6,20 +6,37 @@ exports.getAllUsers = async (req, res) => {
   res.json(users)
 }
 
-// PUT /admin/users/:id
+// PUT /api/admin/users/:id
 exports.updateUser = async (req, res) => {
   const { id } = req.params
-  const updated = await User.findByIdAndUpdate(id, req.body, {
-    new: true,
-    runValidators: true
-  }).select('-password')
-  res.json(updated)
+  const { email, role } = req.body
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      { email, role },
+      { new: true, runValidators: true }
+    ).select('-password')
+
+    if (!user) return res.status(404).json({ error: 'Użytkownik nie znaleziony' })
+
+    res.json(user)
+  } catch (err) {
+    res.status(400).json({ error: 'Nie można zaktualizować użytkownika' })
+  }
 }
 
-// DELETE /admin/users/:id
+
+// DELETE /api/admin/users/:id
 exports.deleteUser = async (req, res) => {
   const { id } = req.params
-  await User.findByIdAndDelete(id)
-  res.status(204).send()
-}
 
+  try {
+    const user = await User.findByIdAndDelete(id)
+    if (!user) return res.status(404).json({ error: 'Użytkownik nie znaleziony' })
+
+    res.status(204).send()
+  } catch (err) {
+    res.status(400).json({ error: 'Nie można usunąć użytkownika' })
+  }
+}
