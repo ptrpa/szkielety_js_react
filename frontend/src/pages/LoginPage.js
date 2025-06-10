@@ -18,7 +18,8 @@ export default function LoginPage() {
     try {
       const token = await loginUser(form)
       login(token)
-      navigate('/')
+      //navigate('/')
+      navigate('/dashboard')
     } catch (err) {
       setError('Nieprawidłowy login lub hasło')
     }
