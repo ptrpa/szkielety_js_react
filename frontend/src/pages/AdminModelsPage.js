@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getAllModels, deleteModel } from '../api/models'
+import { getAllModelsForAdmin, deleteModel } from '../api/models'
+
 
 export default function AdminModelsPage() {
   const [models, setModels] = useState([])
   const [error, setError] = useState(null)
 
   const fetchModels = async () => {
-    try {
-      const data = await getAllModels()
-      setModels(data)
-    } catch (err) {
-      setError('Nie udało się pobrać modeli')
-    }
+  try {
+    const data = await getAllModelsForAdmin()
+    setModels(data)
+  } catch (err) {
+    setError('Nie udało się pobrać modeli')
   }
+}
+
 
   useEffect(() => {
     fetchModels()

@@ -54,3 +54,10 @@ export async function deleteModel(id) {
 }
 
 
+export async function getAllModelsForAdmin() {
+  const res = await fetch('http://localhost:5001/api/admin/models', {
+    headers: authHeader()
+  })
+  if (!res.ok) throw new Error('Nie udało się pobrać modeli (admin)')
+  return await res.json()
+}
