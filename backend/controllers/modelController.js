@@ -21,7 +21,7 @@ async function getModels(req, res) {
       ? {}
       : { userId: req.user.id }
 
-    const models = await SystemModel.find(filter)
+    const models = await SystemModel.find(filter).populate('userId', 'email')
     res.json(models)
   } catch (err) {
     res.status(500).json({ error: err.message })

@@ -49,7 +49,7 @@ export default function AdminPanelPage() {
 
   return (
     <div>
-      <h2>Panel administratora — użytkownicy</h2>
+      <h2>Lista użytkowników</h2>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 

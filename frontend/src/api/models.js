@@ -53,3 +53,4 @@ export async function deleteModel(id) {
   if (!res.ok) throw new Error('Nie udało się usunąć modelu')
 }
 
+
