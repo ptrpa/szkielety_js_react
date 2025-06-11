@@ -43,4 +43,13 @@ export async function updateModel(id, data) {
 }
 
 
-// Możesz dodać inne funkcje: updateModel, deleteModel, getModelById...
+export async function deleteModel(id) {
+  const res = await fetch(`http://localhost:5001/api/models/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${getToken()}`
+    }
+  })
+  if (!res.ok) throw new Error('Nie udało się usunąć modelu')
+}
+

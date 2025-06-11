@@ -1,23 +1,35 @@
 // src/pages/ModelsPage.js
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getAllModels } from '../api/models'
+import { getAllModels, deleteModel } from '../api/models'
 
 export default function ModelsPage() {
   const [models, setModels] = useState([])
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const data = await getAllModels()
-        setModels(data)
-      } catch (err) {
-        setError(err.message)
-      }
+  const fetchModels = async () => {
+    try {
+      const data = await getAllModels()
+      setModels(data)
+    } catch (err) {
+      setError(err.message)
     }
-    fetch()
+  }
+
+  useEffect(() => {
+    fetchModels()
   }, [])
+
+  const handleDelete = async (id) => {
+    const confirm = window.confirm('Czy na pewno chcesz usunąć ten model?')
+    if (!confirm) return
+    try {
+      await deleteModel(id)
+      fetchModels() // odśwież listę
+    } catch (err) {
+      setError('Błąd podczas usuwania modelu')
+    }
+  }
 
   if (error) return <p style={{ color: 'red' }}>{error}</p>
 
@@ -33,8 +45,8 @@ export default function ModelsPage() {
               <strong>{model.name}</strong> – {model.description}
               <div>
                 <Link to={`/models/${model._id}`}>🔍 Podgląd</Link>{' '}
-                |{' '}
-                <Link to={`/models/${model._id}/edit`}>✏ Edytuj</Link>
+                | <Link to={`/models/${model._id}/edit`}>✏ Edytuj</Link>{' '}
+                | <button onClick={() => handleDelete(model._id)}>🗑 Usuń</button>
               </div>
             </li>
           ))}
