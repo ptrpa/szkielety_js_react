@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
+import { getAllModels } from '../api/models'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -11,13 +12,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchModels = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/models', {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        })
-        if (!res.ok) throw new Error('Błąd podczas pobierania modeli')
-        const data = await res.json()
+        const data = await getAllModels()
         setModels(data)
       } catch (err) {
         setError(err.message)
