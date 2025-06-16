@@ -51,3 +51,31 @@ exports.deleteMe = async (req, res) => {
   await User.findByIdAndDelete(req.user.id)
   res.status(204).send()
 }
+
+// PUT /api/me/password
+exports.changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body
+  const user = await User.findById(req.user.id)
+
+  if (!user || !(await user.comparePassword(currentPassword))) {
+    return res.status(401).json({ error: "Błędne aktualne hasło" })
+  }
+
+  if (currentPassword === newPassword) {
+    return res.status(400).json({ error: "Nowe hasło musi różnić się od obecnego" })
+  }
+
+  const isValid = newPassword.length >= 6 &&
+    /[a-zA-Z]/.test(newPassword) &&
+    /\d/.test(newPassword) &&
+    !/\s/.test(newPassword)
+
+  if (!isValid) {
+    return res.status(400).json({ error: "Hasło musi mieć min. 6 znaków, zawierać literę i cyfrę, bez spacji" })
+  }
+
+  user.password = newPassword
+  await user.save()
+
+  res.json({ message: "Hasło zostało zmienione" })
+}

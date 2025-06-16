@@ -11,6 +11,7 @@ import ModelViewPage from '../pages/ModelViewPage'
 import ModelEditPage from '../pages/ModelEditPage'
 import AdminUsersPage from '../pages/AdminUsersPage'
 import AdminModelsPage from '../pages/AdminModelsPage'
+import SettingsPage from '../pages/SettingsPage'
 
 import PrivateRoute from './PrivateRoute'
 
@@ -27,6 +28,8 @@ export default function AppRoutes() {
       <Route path="/models/:id" element={<PrivateRoute><ModelViewPage /></PrivateRoute>} />
       <Route path="/admin/users" element={<PrivateRoute><AdminUsersPage /></PrivateRoute>} />
       <Route path="/admin/models" element={<PrivateRoute><AdminModelsPage /></PrivateRoute>}/>      
+      <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
+
 
       <Route path="/models/:id/edit" element={<PrivateRoute><ModelEditPage /></PrivateRoute>} />
 
