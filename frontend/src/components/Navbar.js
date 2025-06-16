@@ -10,7 +10,10 @@ export default function Navbar() {
     <nav>
       <Link to="/">Strona główna</Link>
       {user ? (
-        <button onClick={logout}>Wyloguj</button>
+        <>
+          <Link to="/dashboard">Dashboard</Link>
+          <button onClick={logout}>Wyloguj</button>
+        </>
       ) : (
         <>
           <Link to="/login">Zaloguj się</Link>
