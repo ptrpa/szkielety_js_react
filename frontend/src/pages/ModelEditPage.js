@@ -12,7 +12,6 @@ export default function ModelEditPage() {
     const fetch = async () => {
       try {
         const model = await getModelById(id)
-
         setForm({
           name: model.name,
           description: model.description || '',
@@ -58,7 +57,6 @@ export default function ModelEditPage() {
         parameters: Object.fromEntries(form.parameters.map(p => [p.name, p.value])),
         initialConditions: Object.fromEntries(form.initialConditions.map(ic => [ic.variable, ic.value]))
       }
-
       await updateModel(id, payload)
       navigate('/models')
     } catch (err) {
@@ -70,107 +68,70 @@ export default function ModelEditPage() {
   if (!form) return <p>Ładowanie...</p>
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <h2>Edytuj model</h2>
+    <div className="container" style={{ maxWidth: '900px', margin: '2rem auto' }}>
+      <div style={{ marginBottom: '1rem' }}>
+        <Link to="/models" className="btn-link">⬅ Powrót do listy modeli</Link>
+      </div>
 
-        <div>
+      <form onSubmit={handleSubmit} className="card" style={{ padding: '2rem', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2 style={{ marginBottom: '1rem' }}>Edytuj model</h2>
+
+        <div className="form-group">
           <label>Nazwa:</label>
           <input value={form.name} onChange={e => handleChange('name', e.target.value)} />
         </div>
 
-        <div>
+        <div className="form-group">
           <label>Opis:</label>
           <input value={form.description} onChange={e => handleChange('description', e.target.value)} />
         </div>
 
-        <div>
-          <label>Zmienne:</label>
-          {form.variables.map((v, i) => (
-            <div key={i}>
-              <input
-                value={v}
-                onChange={e => {
-                  const updated = [...form.variables]
-                  updated[i] = e.target.value
-                  handleChange('variables', updated)
-                }}
-              />
-              <button type="button" onClick={() => removeItem('variables', i)}>🗑</button>
-            </div>
-          ))}
-          <button type="button" onClick={() => addItem('variables', '')}>+ Dodaj zmienną</button>
-        </div>
+        {['variables', 'equations', 'parameters', 'initialConditions'].map((section) => (
+          <div className="form-section" key={section}>
+            <label>{section === 'variables' ? 'Zmienne:' :
+              section === 'equations' ? 'Równania:' :
+              section === 'parameters' ? 'Parametry:' : 'Warunki początkowe:'}</label>
 
-        <div>
-          <label>Równania:</label>
-          {form.equations.map((eq, i) => (
-            <div key={i}>
-              <input
-                placeholder="Zmienna"
-                value={eq.variable}
-                onChange={e => updateItem('equations', i, 'variable', e.target.value)}
-              />
-              <input
-                placeholder="Wyrażenie"
-                value={eq.expression}
-                onChange={e => updateItem('equations', i, 'expression', e.target.value)}
-              />
-              <button type="button" onClick={() => removeItem('equations', i)}>🗑</button>
-            </div>
-          ))}
-          <button type="button" onClick={() => addItem('equations', { variable: '', expression: '' })}>+ Dodaj równanie</button>
-        </div>
+            {form[section].map((item, i) => (
+              <div key={i} className="form-inline">
+                {section === 'variables' ? (
+                  <input
+                    value={item}
+                    onChange={e => {
+                      const updated = [...form.variables]
+                      updated[i] = e.target.value
+                      handleChange('variables', updated)
+                    }}
+                  />
+                ) : (
+                  Object.entries(item).map(([key, val]) => (
+                    <input
+                      key={key}
+                      placeholder={key}
+                      type={typeof val === 'number' ? 'number' : 'text'}
+                      value={val}
+                      onChange={e =>
+                        updateItem(section, i, key, typeof val === 'number' ? parseFloat(e.target.value) : e.target.value)
+                      }
+                    />
+                  ))
+                )}
+                <button type="button" onClick={() => removeItem(section, i)}>🗑</button>
+              </div>
+            ))}
+            <button type="button" onClick={() => addItem(section,
+              section === 'variables' ? '' :
+              section === 'equations' ? { variable: '', expression: '' } :
+              section === 'parameters' ? { name: '', value: 0 } : { variable: '', value: 0 }
+            )}>
+              + Dodaj {section === 'variables' ? 'zmienną' : section === 'equations' ? 'równanie' : section === 'parameters' ? 'parametr' : 'warunek początkowy'}
+            </button>
+          </div>
+        ))}
 
-        <div>
-          <label>Parametry:</label>
-          {form.parameters.map((p, i) => (
-            <div key={i}>
-              <input
-                placeholder="Nazwa"
-                value={p.name}
-                onChange={e => updateItem('parameters', i, 'name', e.target.value)}
-              />
-              <input
-                type="number"
-                placeholder="Wartość"
-                value={p.value}
-                onChange={e => updateItem('parameters', i, 'value', parseFloat(e.target.value))}
-              />
-              <button type="button" onClick={() => removeItem('parameters', i)}>🗑</button>
-            </div>
-          ))}
-          <button type="button" onClick={() => addItem('parameters', { name: '', value: 0 })}>+ Dodaj parametr</button>
-        </div>
-
-        <div>
-          <label>Warunki początkowe:</label>
-          {form.initialConditions.map((ic, i) => (
-            <div key={i}>
-              <input
-                placeholder="Zmienna"
-                value={ic.variable}
-                onChange={e => updateItem('initialConditions', i, 'variable', e.target.value)}
-              />
-              <input
-                type="number"
-                placeholder="Wartość"
-                value={ic.value}
-                onChange={e => updateItem('initialConditions', i, 'value', parseFloat(e.target.value))}
-              />
-              <button type="button" onClick={() => removeItem('initialConditions', i)}>🗑</button>
-            </div>
-          ))}
-          <button type="button" onClick={() => addItem('initialConditions', { variable: '', value: 0 })}>+ Dodaj warunek początkowy</button>
-        </div>
-
-        <button type="submit">💾 Zapisz zmiany</button>
+        <button type="submit" className="btn-link" style={{ marginTop: '1rem' }}>💾 Zapisz zmiany</button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
-
-      <div style={{ marginTop: '1em' }}>
-        <Link to="/models">⬅ Powrót do listy modeli</Link>
-      </div>
     </div>
   )
 }

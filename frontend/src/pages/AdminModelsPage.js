@@ -2,20 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllModelsForAdmin, deleteModel } from '../api/models'
 
-
 export default function AdminModelsPage() {
   const [models, setModels] = useState([])
   const [error, setError] = useState(null)
 
   const fetchModels = async () => {
-  try {
-    const data = await getAllModelsForAdmin()
-    setModels(data)
-  } catch (err) {
-    setError('Nie udało się pobrać modeli')
+    try {
+      const data = await getAllModelsForAdmin()
+      setModels(data)
+    } catch (err) {
+      setError('Nie udało się pobrać modeli')
+    }
   }
-}
-
 
   useEffect(() => {
     fetchModels()
@@ -32,37 +30,35 @@ export default function AdminModelsPage() {
     }
   }
 
-  if (error) return <p style={{ color: 'red' }}>{error}</p>
-
   return (
-    <div>
+    <div className="container" style={{ maxWidth: '900px', margin: '2rem auto' }}>
+      <div style={{ marginBottom: '1rem' }}>
+        <Link to="/dashboard" className="btn-link">⬅ Powrót do dashboardu</Link>
+      </div>
+
       <h2>📦 Zarządzanie modelami</h2>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {models.length === 0 ? (
         <p>Brak modeli w systemie</p>
       ) : (
-        <ul>
+        <ul style={{ listStyle: 'none', padding: 0, marginTop: '1rem' }}>
           {models.map((model) => (
-            <li key={model._id} style={{ marginBottom: '1em' }}>
+            <li key={model._id} className="card" style={{ padding: '1rem', marginBottom: '1rem', border: '1px solid #ddd', borderRadius: '8px' }}>
               <strong>{model.name}</strong> — {model.description}
-              <div>
+              <div style={{ fontSize: '0.9rem', margin: '0.5rem 0' }}>
                 👤 Właściciel: <em>{model.userId?.email || 'Nieznany'}</em>
               </div>
-              <div>
-                <Link to={`/models/${model._id}`}>🔍 Podgląd</Link>{' '}
-                |{' '}
-                <Link to={`/models/${model._id}/edit`}>✏ Edytuj</Link>{' '}
-                |{' '}
-                <button onClick={() => handleDelete(model._id)}>🗑 Usuń</button>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <Link to={`/models/${model._id}`} className="btn-link">🔍 Podgląd</Link>
+                <Link to={`/models/${model._id}/edit`} className="btn-link">✏ Edytuj</Link>
+                <button onClick={() => handleDelete(model._id)} className="btn-danger">🗑 Usuń</button>
               </div>
             </li>
           ))}
         </ul>
       )}
-
-      <div style={{ marginTop: '1em' }}>
-        <Link to="/dashboard">⬅ Powrót do dashboardu</Link>
-      </div>
     </div>
   )
 }

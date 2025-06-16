@@ -1,4 +1,3 @@
-// src/pages/ModelViewPage.js
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getModelById } from '../api/models'
@@ -24,21 +23,28 @@ export default function ModelViewPage() {
   if (!model) return <p>Ładowanie...</p>
 
   return (
-    <div>
-      <h2>{model.name}</h2>
-      <p><strong>Opis:</strong> {model.description}</p>
-      <p><strong>Zmienne:</strong> {model.variables.join(', ')}</p>
-      <p><strong>Równania:</strong></p>
-      <ul>
-        {Object.entries(model.equations).map(([k, v]) => (
-          <li key={k}>{k}′ = {v}</li>
-        ))}
-      </ul>
-      <p><strong>Parametry:</strong> {JSON.stringify(model.parameters)}</p>
-      <p><strong>Warunki początkowe:</strong> {JSON.stringify(model.initialConditions)}</p>
+    <div className="container" style={{ maxWidth: '800px', margin: '2rem auto' }}>
+      <div style={{ marginBottom: '1rem' }}>
+        <Link to="/models" className="btn-link">⬅ Powrót do listy modeli</Link>
+      </div>
 
-      <div style={{ marginTop: '1em' }}>
-        <Link to="/models">⬅ Powrót do listy modeli</Link>
+      <div className="card" style={{ padding: '2rem', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2 style={{ marginBottom: '1rem' }}>{model.name}</h2>
+
+        <p><strong>Opis:</strong> {model.description}</p>
+        <p><strong>Zmienne:</strong> {model.variables.join(', ')}</p>
+
+        <div>
+          <strong>Równania:</strong>
+          <ul>
+            {Object.entries(model.equations).map(([k, v]) => (
+              <li key={k}>{k}′ = {v}</li>
+            ))}
+          </ul>
+        </div>
+
+        <p><strong>Parametry:</strong> {JSON.stringify(model.parameters)}</p>
+        <p><strong>Warunki początkowe:</strong> {JSON.stringify(model.initialConditions)}</p>
       </div>
     </div>
   )

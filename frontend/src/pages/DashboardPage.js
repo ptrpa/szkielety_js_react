@@ -34,37 +34,38 @@ export default function DashboardPage() {
   if (!user) return <p>Ładowanie...</p>
 
   return (
-    <div>
-      <h2>Witaj, {user.email}</h2>
+    <div className="container" style={{ maxWidth: '800px', margin: '2rem auto' }}>
+      <div className="card" style={{ padding: '2rem', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+        <h2 style={{ marginBottom: '1rem' }}>Witaj, {user.email}</h2>
 
-      {user.role === 'admin' ? (
-        <>
-          <p>🔐 Masz uprawnienia administratora</p>
-          <p>👥 Liczba użytkowników: <strong>{users.length}</strong></p>
-          <p>📦 Liczba wszystkich modeli: <strong>{models.length}</strong></p>
+        {user.role === 'admin' ? (
+          <>
+            <p style={{ margin: '0.5rem 0' }}>🔐 Masz uprawnienia administratora</p>
+            <p style={{ margin: '0.5rem 0' }}>👥 Liczba użytkowników: <strong>{users.length}</strong></p>
+            <p style={{ margin: '0.5rem 0' }}>📦 Liczba modeli: <strong>{models.length}</strong></p>
 
-          <div style={{ marginTop: '1em' }}>
-            <Link to="/admin/users">👥 Zarządzaj użytkownikami</Link><br />
-            <Link to="/admin/models">📦 Zarządzaj modelami</Link><br />
-            <Link to="/settings">⚙ Ustawienia</Link>
-          </div>
-        </>
-      ) : (
-        <>
-          <p>Masz {models.length} modeli.</p>
-          {models.length > 0 && (
-            <p>Ostatni model: <strong>{models[models.length - 1].name}</strong></p>
-          )}
+            <div className="actions" style={{ marginTop: '1.5rem' }}>
+              <Link to="/admin/users" className="btn-link">👥 Zarządzaj użytkownikami</Link><br />
+              <Link to="/admin/models" className="btn-link">📦 Zarządzaj modelami</Link><br />
+              <Link to="/settings" className="btn-link">⚙ Ustawienia</Link>
+            </div>
+          </>
+        ) : (
+          <>
+            <p>Masz {models.length} modeli.</p>
+            {models.length > 0 && (
+              <p>Ostatni model: <strong>{models[models.length - 1].name}</strong></p>
+            )}
+            <div className="actions" style={{ marginTop: '1.5rem' }}>
+              <Link to="/models" className="btn-link">📂 Przeglądaj modele</Link><br />
+              <Link to="/models/new" className="btn-link">➕ Utwórz nowy model</Link><br />
+              <Link to="/settings" className="btn-link">⚙ Ustawienia</Link>
+            </div>
+          </>
+        )}
 
-          <div style={{ marginTop: '1em' }}>
-            <Link to="/models">📂 Przeglądaj modele</Link><br />
-            <Link to="/models/new">➕ Utwórz nowy model</Link><br />
-            <Link to="/settings">⚙ Ustawienia</Link>
-          </div>
-        </>
-      )}
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
+      </div>
     </div>
   )
 }

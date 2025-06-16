@@ -1,9 +1,8 @@
-// src/pages/AdminPanelPage.js
 import React, { useEffect, useState } from 'react'
 import { getAllUsers, updateUser, deleteUser } from '../api/admin'
 import { Link } from 'react-router-dom'
 
-export default function AdminPanelPage() {
+export default function AdminUsersPage() {
   const [users, setUsers] = useState([])
   const [error, setError] = useState(null)
 
@@ -48,29 +47,34 @@ export default function AdminPanelPage() {
   }
 
   return (
-    <div>
-      <h2>Lista użytkowników</h2>
+    <div className="container" style={{ maxWidth: '800px', margin: '2rem auto' }}>
+      <div style={{ marginBottom: '1rem' }}>
+        <Link to="/dashboard" className="btn-link">⬅ Powrót do dashboardu</Link>
+      </div>
+
+      <h2>👥 Lista użytkowników</h2>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      <table border="1" cellPadding="8">
+      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '1rem' }}>
         <thead>
-          <tr>
-            <th>E-mail</th>
-            <th>Rola</th>
-            <th>Akcje</th>
+          <tr style={{ backgroundColor: '#f5f5f5' }}>
+            <th style={{ padding: '0.5rem', borderBottom: '1px solid #ccc' }}>E-mail</th>
+            <th style={{ padding: '0.5rem', borderBottom: '1px solid #ccc' }}>Rola</th>
+            <th style={{ padding: '0.5rem', borderBottom: '1px solid #ccc' }}>Akcje</th>
           </tr>
         </thead>
         <tbody>
           {users.map(user => (
             <tr key={user._id}>
-              <td>
+              <td style={{ padding: '0.5rem', borderBottom: '1px solid #eee' }}>
                 <input
                   value={user.email}
                   onChange={e => handleChange(user._id, 'email', e.target.value)}
+                  style={{ width: '100%' }}
                 />
               </td>
-              <td>
+              <td style={{ padding: '0.5rem', borderBottom: '1px solid #eee' }}>
                 <select
                   value={user.role}
                   onChange={e => handleChange(user._id, 'role', e.target.value)}
@@ -79,18 +83,14 @@ export default function AdminPanelPage() {
                   <option value="admin">admin</option>
                 </select>
               </td>
-              <td>
-                <button onClick={() => handleSave(user._id)}>💾 Zapisz</button>{' '}
-                <button onClick={() => handleDelete(user._id)}>🗑 Usuń</button>
+              <td style={{ padding: '0.5rem', borderBottom: '1px solid #eee' }}>
+                <button onClick={() => handleSave(user._id)} className="btn-link">💾 Zapisz</button>{' '}
+                <button onClick={() => handleDelete(user._id)} className="btn-danger">🗑 Usuń</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      <div style={{ marginTop: '1em' }}>
-        <Link to="/dashboard">⬅ Powrót do dashboardu</Link>
-      </div>
     </div>
   )
 }

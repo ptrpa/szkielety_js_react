@@ -25,36 +25,40 @@ export default function ModelsPage() {
     if (!confirm) return
     try {
       await deleteModel(id)
-      fetchModels() // odśwież listę
+      fetchModels()
     } catch (err) {
       setError('Błąd podczas usuwania modelu')
     }
   }
 
-  if (error) return <p style={{ color: 'red' }}>{error}</p>
-
   return (
-    <div>
-      <h2>Twoje modele</h2>
+    <div className="container" style={{ maxWidth: '900px', margin: '2rem auto' }}>
+      <div className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>Twoje modele</h2>
+        <Link to="/dashboard" className="btn-link">⬅ Powrót do panelu</Link>
+      </div>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
       {models.length === 0 ? (
         <p>Brak modeli</p>
       ) : (
-        <ul>
+        <ul className="model-list" style={{ listStyle: 'none', padding: 0, marginTop: '1rem' }}>
           {models.map((model) => (
-            <li key={model._id}>
-              <strong>{model.name}</strong> – {model.description}
-              <div>
-                <Link to={`/models/${model._id}`}>🔍 Podgląd</Link>{' '}
-                | <Link to={`/models/${model._id}/edit`}>✏ Edytuj</Link>{' '}
-                | <button onClick={() => handleDelete(model._id)}>🗑 Usuń</button>
+            <li key={model._id} className="model-item" style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+              <div style={{ marginBottom: '0.5rem' }}>
+                <strong>{model.name}</strong><br />
+                <small>{model.description}</small>
+              </div>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <Link to={`/models/${model._id}`} className="btn-link">🔍 Podgląd</Link>
+                <Link to={`/models/${model._id}/edit`} className="btn-link">✏ Edytuj</Link>
+                <button onClick={() => handleDelete(model._id)} className="btn-danger">🗑 Usuń</button>
               </div>
             </li>
           ))}
         </ul>
       )}
-      <div style={{ marginTop: '1em' }}>
-        <Link to="/dashboard">⬅ Powrót do panelu</Link>
-      </div>
     </div>
   )
 }

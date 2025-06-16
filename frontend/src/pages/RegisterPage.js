@@ -1,4 +1,3 @@
-// src/pages/RegisterPage.js
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { registerUser } from '../api/auth'
@@ -25,26 +24,34 @@ export default function RegisterPage() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Rejestracja</h2>
-      <input
-        name="email"
-        type="email"
-        placeholder="E-mail"
-        value={form.email}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="password"
-        type="password"
-        placeholder="Hasło"
-        value={form.password}
-        onChange={handleChange}
-        required
-      />
-      <button type="submit">Zarejestruj się</button>
-      {error && <p>{error}</p>}
-    </form>
+    <div className="container" style={{ maxWidth: '400px', margin: '2rem auto' }}>
+      <form onSubmit={handleSubmit} className="card" style={{ padding: '2rem', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2>Rejestracja</h2>
+        <div className="form-group">
+          <label>Email:</label>
+          <input
+            name="email"
+            type="email"
+            placeholder="E-mail"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Hasło:</label>
+          <input
+            name="password"
+            type="password"
+            placeholder="Hasło"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <button type="submit" className="btn-link">Zarejestruj się</button>
+        {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
+      </form>
+    </div>
   )
 }

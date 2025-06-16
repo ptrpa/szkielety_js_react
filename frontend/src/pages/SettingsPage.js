@@ -24,12 +24,16 @@ export default function SettingsPage() {
   }
 
   return (
-    <div>
-      <h2>🔐 Zmień hasło</h2>
+    <div className="container" style={{ maxWidth: '500px', margin: '2rem auto' }}>
+      <div style={{ marginBottom: '1rem' }}>
+        <Link to="/dashboard" className="btn-link">⬅ Powrót do dashboardu</Link>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Obecne hasło:</label><br />
+      <form onSubmit={handleSubmit} className="card" style={{ padding: '2rem', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2>🔐 Zmień hasło</h2>
+
+        <div className="form-group">
+          <label>Obecne hasło:</label>
           <input
             type="password"
             value={currentPassword}
@@ -38,8 +42,8 @@ export default function SettingsPage() {
           />
         </div>
 
-        <div>
-          <label>Nowe hasło:</label><br />
+        <div className="form-group">
+          <label>Nowe hasło:</label>
           <input
             type="password"
             value={newPassword}
@@ -48,15 +52,11 @@ export default function SettingsPage() {
           />
         </div>
 
-        <button type="submit">Zmień hasło</button>
+        <button type="submit" className="btn-link">Zmień hasło</button>
+
+        {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
+        {success && <p style={{ color: 'green', marginTop: '1rem' }}>{success}</p>}
       </form>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-
-      <div style={{ marginTop: '1em' }}>
-        <Link to="/dashboard">⬅ Powrót do dashboardu</Link>
-      </div>
     </div>
   )
 }

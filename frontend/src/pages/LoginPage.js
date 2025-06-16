@@ -1,4 +1,3 @@
-// src/pages/LoginPage.js
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { loginUser } from '../api/auth'
@@ -18,7 +17,6 @@ export default function LoginPage() {
     try {
       const token = await loginUser(form)
       login(token)
-      //navigate('/')
       navigate('/dashboard')
     } catch (err) {
       setError('Nieprawidłowy login lub hasło')
@@ -26,12 +24,36 @@ export default function LoginPage() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Logowanie</h2>
-      <input name="email" placeholder="E-mail" onChange={handleChange} />
-      <input name="password" type="password" placeholder="Hasło" onChange={handleChange} />
-      <button type="submit">Zaloguj</button>
-      {error && <p>{error}</p>}
-    </form>
+    <div className="container" style={{ maxWidth: '400px', margin: '2rem auto' }}>
+      <form onSubmit={handleSubmit} className="card" style={{ padding: '2rem', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2>Logowanie</h2>
+
+        <div className="form-group">
+          <label>Email:</label>
+          <input
+            name="email"
+            type="email"
+            placeholder="E-mail"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Hasło:</label>
+          <input
+            name="password"
+            type="password"
+            placeholder="Hasło"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn-link">Zaloguj</button>
+
+        {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
+      </form>
+    </div>
   )
 }
