@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { getModelById, updateModel } from '../api/models'
+import ErrorDialog from '../components/ErrorDialog'
+import validateModelForm from '../utils/validateModelForm'
 
 export default function ModelEditPage() {
   const { id } = useParams()
@@ -48,6 +50,13 @@ export default function ModelEditPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    const validationError = validateModelForm(form)
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+
     try {
       const payload = {
         name: form.name,
@@ -60,11 +69,10 @@ export default function ModelEditPage() {
       await updateModel(id, payload)
       navigate('/models')
     } catch (err) {
-      setError('Błąd zapisu')
+      setError(err.message || 'Błąd zapisu')
     }
   }
 
-  if (error) return <p style={{ color: 'red' }}>{error}</p>
   if (!form) return <p>Ładowanie...</p>
 
   return (
@@ -121,8 +129,8 @@ export default function ModelEditPage() {
             ))}
             <button type="button" onClick={() => addItem(section,
               section === 'variables' ? '' :
-              section === 'equations' ? { variable: '', expression: '' } :
-              section === 'parameters' ? { name: '', value: 0 } : { variable: '', value: 0 }
+                section === 'equations' ? { variable: '', expression: '' } :
+                  section === 'parameters' ? { name: '', value: 0 } : { variable: '', value: 0 }
             )}>
               + Dodaj {section === 'variables' ? 'zmienną' : section === 'equations' ? 'równanie' : section === 'parameters' ? 'parametr' : 'warunek początkowy'}
             </button>
@@ -130,8 +138,9 @@ export default function ModelEditPage() {
         ))}
 
         <button type="submit" className="btn-link" style={{ marginTop: '1rem' }}>💾 Zapisz zmiany</button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
+
+      {error && <ErrorDialog message={error} onClose={() => setError(null)} />}
     </div>
   )
 }

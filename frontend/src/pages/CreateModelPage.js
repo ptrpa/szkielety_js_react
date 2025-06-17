@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { createModel } from '../api/models'
+import validateModelForm from '../utils/validateModelForm'
+import ErrorDialog from '../components/ErrorDialog'
 
 export default function CreateModelPage() {
   const [form, setForm] = useState({
@@ -40,6 +42,12 @@ export default function CreateModelPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    const validationError = validateModelForm(form)
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+
     try {
       const payload = {
         name: form.name,
@@ -53,7 +61,7 @@ export default function CreateModelPage() {
       await createModel(payload)
       navigate('/dashboard')
     } catch (err) {
-      setError(err.message)
+      setError(err.message || 'Błąd zapisu')
     }
   }
 
@@ -111,8 +119,8 @@ export default function CreateModelPage() {
             ))}
             <button type="button" onClick={() => addItem(section,
               section === 'variables' ? '' :
-              section === 'equations' ? { variable: '', expression: '' } :
-              section === 'parameters' ? { name: '', value: 0 } : { variable: '', value: 0 }
+                section === 'equations' ? { variable: '', expression: '' } :
+                  section === 'parameters' ? { name: '', value: 0 } : { variable: '', value: 0 }
             )}>
               + Dodaj {section === 'variables' ? 'zmienną' : section === 'equations' ? 'równanie' : section === 'parameters' ? 'parametr' : 'warunek początkowy'}
             </button>
@@ -120,8 +128,9 @@ export default function CreateModelPage() {
         ))}
 
         <button type="submit" className="btn-link" style={{ marginTop: '1rem' }}>💾 Zapisz model</button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
+
+      {error && <ErrorDialog message={error} onClose={() => setError(null)} />}
     </div>
   )
 }
