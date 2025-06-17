@@ -5,9 +5,19 @@ const { generateToken } = require('../utils/token')
 exports.register = async (req, res, next) => {
   try {
     const { email, password } = req.body
+
     const existing = await User.findOne({ email })
     if (existing) {
       return res.status(409).json({ error: "Użytkownik już istnieje" })
+    }
+
+    const isValid = password.length >= 6 &&
+      /[a-zA-Z]/.test(password) &&
+      /\d/.test(password) &&
+      !/\s/.test(password)
+
+    if (!isValid) {
+      return res.status(400).json({ error: "Hasło musi mieć min. 6 znaków, zawierać literę i cyfrę, bez spacji" })
     }
 
     const user = await User.create({ email, password })
@@ -17,6 +27,7 @@ exports.register = async (req, res, next) => {
     next(err)
   }
 }
+
 
 // POST /login
 exports.login = async (req, res, next) => {
