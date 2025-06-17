@@ -3,10 +3,12 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import { getModelById, updateModel } from '../api/models'
 import ErrorDialog from '../components/ErrorDialog'
 import validateModelForm from '../utils/validateModelForm'
+import useAuth from '../hooks/useAuth'
 
 export default function ModelEditPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [form, setForm] = useState(null)
   const [error, setError] = useState(null)
 
@@ -67,7 +69,7 @@ export default function ModelEditPage() {
         initialConditions: Object.fromEntries(form.initialConditions.map(ic => [ic.variable, ic.value]))
       }
       await updateModel(id, payload)
-      navigate('/models')
+      navigate(user?.role === 'admin' ? '/admin/models' : '/models')
     } catch (err) {
       setError(err.message || 'Błąd zapisu')
     }
@@ -78,7 +80,9 @@ export default function ModelEditPage() {
   return (
     <div className="container" style={{ maxWidth: '900px', margin: '2rem auto' }}>
       <div style={{ marginBottom: '1rem' }}>
-        <Link to="/models" className="btn-link">⬅ Powrót do listy modeli</Link>
+        <Link to={user?.role === 'admin' ? "/admin/models" : "/models"} className="btn-link">
+          ⬅ Powrót do listy modeli
+        </Link>
       </div>
 
       <form onSubmit={handleSubmit} className="card" style={{ padding: '2rem', border: '1px solid #ddd', borderRadius: '8px' }}>

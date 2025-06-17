@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getModelById } from '../api/models'
+import useAuth from '../hooks/useAuth'
 
 export default function ModelViewPage() {
   const { id } = useParams()
+  const { user } = useAuth()
   const [model, setModel] = useState(null)
   const [error, setError] = useState(null)
 
@@ -25,7 +27,9 @@ export default function ModelViewPage() {
   return (
     <div className="container" style={{ maxWidth: '800px', margin: '2rem auto' }}>
       <div style={{ marginBottom: '1rem' }}>
-        <Link to="/models" className="btn-link">⬅ Powrót do listy modeli</Link>
+        <Link to={user?.role === 'admin' ? "/admin/models" : "/models"} className="btn-link">
+          ⬅ Powrót do listy modeli
+        </Link>
       </div>
 
       <div className="card" style={{ padding: '2rem', border: '1px solid #ddd', borderRadius: '8px' }}>
