@@ -1,8 +1,11 @@
 const SystemModel = require('../models/SystemModel')
+const { validateModelInput } = require('../utils/modelValidator')
 
 // POST /api/models
 async function createModel(req, res) {
   try {
+    validateModelInput(req.body)
+
     const model = new SystemModel({
       ...req.body,
       userId: req.user.id
@@ -64,6 +67,7 @@ async function updateModel(req, res) {
       return res.status(403).json({ error: 'Model nie jest edytowalny' })
     }
 
+    validateModelInput(req.body)
     Object.assign(model, req.body)
     if (isAdmin) model.modifiedByAdmin = true
 
@@ -103,7 +107,6 @@ async function getAllModels(req, res) {
     res.status(500).json({ error: err.message })
   }
 }
-
 
 module.exports = {
   createModel,
