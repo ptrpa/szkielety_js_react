@@ -1,64 +1,86 @@
 // src/pages/ModelsPage.js
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { getAllModels, deleteModel } from '../api/models'
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { getAllModels, deleteModel } from '../api/models';
 
 export default function ModelsPage() {
-  const [models, setModels] = useState([])
-  const [error, setError] = useState(null)
+  const [models, setModels] = useState([]);
+  const [error, setError] = useState(null);
 
   const fetchModels = async () => {
     try {
-      const data = await getAllModels()
-      setModels(data)
+      const data = await getAllModels();
+      setModels(data);
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchModels()
-  }, [])
+    fetchModels();
+  }, []);
 
   const handleDelete = async (id) => {
-    const confirm = window.confirm('Czy na pewno chcesz usunąć ten model?')
-    if (!confirm) return
+    const confirm = window.confirm('Czy na pewno chcesz usunąć ten model?');
+    if (!confirm) return;
     try {
-      await deleteModel(id)
-      fetchModels()
+      await deleteModel(id);
+      fetchModels();
     } catch (err) {
-      setError('Błąd podczas usuwania modelu')
+      setError('Błąd podczas usuwania modelu');
     }
-  }
+  };
 
   return (
-    <div className="container" style={{ maxWidth: '900px', margin: '2rem auto' }}>
-      <div className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="container my-5" style={{ maxWidth: '900px' }}>
+      <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>Twoje modele</h2>
-        <Link to="/dashboard" className="btn-link">⬅ Powrót do panelu</Link>
+        <Link to="/dashboard" className="btn btn-outline-secondary btn-sm">
+          <i className="bi bi-arrow-left me-1"></i> Powrót do panelu
+        </Link>
       </div>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && (
+        <div className="alert alert-danger">{error}</div>
+      )}
 
       {models.length === 0 ? (
-        <p>Brak modeli</p>
+        <div className="alert alert-info">Brak modeli</div>
       ) : (
-        <ul className="model-list" style={{ listStyle: 'none', padding: 0, marginTop: '1rem' }}>
+        <div className="list-group">
           {models.map((model) => (
-            <li key={model._id} className="model-item" style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-              <div style={{ marginBottom: '0.5rem' }}>
-                <strong>{model.name}</strong><br />
-                <small>{model.description}</small>
+            <div
+              key={model._id}
+              className="list-group-item list-group-item-action mb-3 shadow-sm rounded"
+            >
+              <div className="mb-2">
+                <h5 className="mb-1">{model.name}</h5>
+                <p className="mb-2 text-muted">{model.description}</p>
               </div>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <Link to={`/models/${model._id}`} className="btn-link">🔍 Podgląd</Link>
-                <Link to={`/models/${model._id}/edit`} className="btn-link">✏ Edytuj</Link>
-                <button onClick={() => handleDelete(model._id)} className="btn-danger">🗑 Usuń</button>
+              <div className="d-flex gap-2 flex-wrap">
+                <Link
+                  to={`/models/${model._id}`}
+                  className="btn btn-outline-primary btn-sm"
+                >
+                  <i className="bi bi-eye me-1"></i> Podgląd
+                </Link>
+                <Link
+                  to={`/models/${model._id}/edit`}
+                  className="btn btn-outline-secondary btn-sm"
+                >
+                  <i className="bi bi-pencil me-1"></i> Edytuj
+                </Link>
+                <button
+                  onClick={() => handleDelete(model._id)}
+                  className="btn btn-outline-danger btn-sm"
+                >
+                  <i className="bi bi-trash me-1"></i> Usuń
+                </button>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
-  )
+  );
 }

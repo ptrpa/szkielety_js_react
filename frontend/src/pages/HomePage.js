@@ -1,43 +1,47 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import useAuth from '../hooks/useAuth'
+// src/pages/HomePage.js
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 export default function HomePage() {
-  const { user } = useAuth()
-  const navigate = useNavigate()
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
-    <div className="container" style={{ maxWidth: '800px', margin: '2rem auto', textAlign: 'center' }}>
-      <div className="card" style={{ padding: '2rem', border: '1px solid #ddd', borderRadius: '8px' }}>
-        <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
-          👋 Witaj w aplikacji modeli dynamicznych
+    <div className="container my-5">
+      <div className="card shadow-sm p-4 text-center">
+        <h1 className="mb-4">
+          <i className="bi bi-house-door me-2"></i>
+          Witaj w aplikacji modeli dynamicznych
         </h1>
 
-        <p style={{ marginBottom: '1.5rem' }}>
-          Twórz, edytuj i analizuj modele układów dynamicznych.
-          Jako użytkownik możesz zarządzać swoimi modelami, a jako administrator – nadzorować cały system.
+        <p className="mb-4">
+          Twórz, edytuj i analizuj modele układów dynamicznych.<br />
+          Użytkownicy mogą zarządzać swoimi modelami, a administratorzy nadzorować system.
         </p>
 
         {user ? (
           <>
-            <p style={{ marginBottom: '1rem' }}>
+            <p className="mb-3">
               Zalogowany jako: <strong>{user.role}</strong>
             </p>
-            <button onClick={() => navigate('/dashboard')} className="btn-link">
-              👉 Przejdź do panelu użytkownika
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="btn btn-primary"
+            >
+              <i className="bi bi-speedometer2 me-2"></i>
+              Przejdź do panelu użytkownika
             </button>
           </>
         ) : (
           <>
-            <p style={{ marginBottom: '1rem' }}>
-              Nie jesteś zalogowany.
-            </p>
-            <p>
+            <p className="mb-2">Nie jesteś zalogowany.</p>
+            <p className="text-muted">
               <strong>Zaloguj się</strong> lub <strong>zarejestruj</strong>, używając opcji w górnym menu.
             </p>
           </>
         )}
       </div>
     </div>
-  )
+  );
 }

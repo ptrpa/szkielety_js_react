@@ -1,47 +1,29 @@
-import React from 'react'
+import React from 'react';
 
 export default function ErrorDialog({ message, onClose }) {
-  if (!message) return null
+  if (!message) return null;
 
   return (
-    <div style={overlayStyle}>
-      <div style={modalStyle}>
-        <h3 style={{ marginTop: 0 }}>Błąd</h3>
-        <p>{message}</p>
-        <button onClick={onClose} style={buttonStyle}>OK</button>
+    <div className="modal fade show d-block" tabIndex="-1" style={overlayStyle}>
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content border-danger">
+          <div className="modal-header bg-danger text-white">
+            <h5 className="modal-title">Błąd</h5>
+            <button type="button" className="btn-close btn-close-white" onClick={onClose}></button>
+          </div>
+          <div className="modal-body">
+            <p>{message}</p>
+          </div>
+          <div className="modal-footer">
+            <button className="btn btn-danger" onClick={onClose}>OK</button>
+          </div>
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
 const overlayStyle = {
-  position: 'fixed',
-  top: 0, left: 0,
-  width: '100vw',
-  height: '100vh',
-  backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  zIndex: 1000
-}
-
-const modalStyle = {
-  backgroundColor: '#fff',
-  padding: '2rem',
-  borderRadius: '8px',
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-  maxWidth: '400px',
-  width: '90%',
-  textAlign: 'center'
-}
-
-const buttonStyle = {
-  marginTop: '1rem',
-  padding: '0.5rem 1rem',
-  border: 'none',
-  borderRadius: '4px',
-  backgroundColor: '#007bff',
-  color: 'white',
-  cursor: 'pointer'
-}
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  zIndex: 1050
+};

@@ -1,71 +1,108 @@
-// src/pages/DashboardPage.js
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import useAuth from '../hooks/useAuth'
-import { getAllModels } from '../api/models'
-import { getAllUsers } from '../api/admin'
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
+import { getAllModels } from '../api/models';
+import { getAllUsers } from '../api/admin';
 
 export default function DashboardPage() {
-  const { user } = useAuth()
-  const [models, setModels] = useState([])
-  const [users, setUsers] = useState([])
-  const [error, setError] = useState(null)
+  const { user } = useAuth();
+  const [models, setModels] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!user) return
+    if (!user) return;
 
     const fetchData = async () => {
       try {
-        const modelsData = await getAllModels()
-        setModels(modelsData)
+        const modelsData = await getAllModels();
+        setModels(modelsData);
 
         if (user.role === 'admin') {
-          const usersData = await getAllUsers()
-          setUsers(usersData)
+          const usersData = await getAllUsers();
+          setUsers(usersData);
         }
       } catch (err) {
-        setError(err.message)
+        setError(err.message);
       }
-    }
+    };
 
-    fetchData()
-  }, [user])
+    fetchData();
+  }, [user]);
 
-  if (!user) return <p>Ładowanie...</p>
+  if (!user) return <div className="text-center mt-5">Ładowanie...</div>;
 
   return (
-    <div className="container" style={{ maxWidth: '800px', margin: '2rem auto' }}>
-      <div className="card" style={{ padding: '2rem', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-        <h2 style={{ marginBottom: '1rem' }}>Witaj, {user.email}</h2>
+    <div className="container my-5">
+      <div className="card shadow-lg p-4">
+        <h2 className="mb-4">
+          Witaj, <span className="text-primary">{user.email}</span>
+        </h2>
 
         {user.role === 'admin' ? (
           <>
-            <p style={{ margin: '0.5rem 0' }}>🔐 Masz uprawnienia administratora</p>
-            <p style={{ margin: '0.5rem 0' }}>👥 Liczba użytkowników: <strong>{users.length}</strong></p>
-            <p style={{ margin: '0.5rem 0' }}>📦 Liczba modeli: <strong>{models.length}</strong></p>
+            <div className="mb-3">
+              <p className="mb-1">
+                <i className="bi bi-shield-lock me-2"></i>
+                <strong>Uprawnienia:</strong> Administrator
+              </p>
+              <p className="mb-1">
+                <i className="bi bi-people me-2"></i>
+                <strong>Użytkowników:</strong> {users.length}
+              </p>
+              <p className="mb-3">
+                <i className="bi bi-box me-2"></i>
+                <strong>Modeli:</strong> {models.length}
+              </p>
+            </div>
 
-            <div className="actions" style={{ marginTop: '1.5rem' }}>
-              <Link to="/admin/users" className="btn-link">👥 Zarządzaj użytkownikami</Link><br />
-              <Link to="/admin/models" className="btn-link">📦 Zarządzaj modelami</Link><br />
-              <Link to="/settings" className="btn-link">⚙ Ustawienia</Link>
+            <div className="d-grid gap-2 d-md-block">
+              <Link to="/admin/users" className="btn btn-outline-primary me-2">
+                <i className="bi bi-people me-1"></i>Zarządzaj użytkownikami
+              </Link>
+              <Link to="/admin/models" className="btn btn-outline-secondary me-2">
+                <i className="bi bi-box me-1"></i>Zarządzaj modelami
+              </Link>
+              <Link to="/settings" className="btn btn-outline-dark">
+                <i className="bi bi-gear me-1"></i>Ustawienia
+              </Link>
             </div>
           </>
         ) : (
           <>
-            <p>Masz {models.length} modeli.</p>
-            {models.length > 0 && (
-              <p>Ostatni model: <strong>{models[models.length - 1].name}</strong></p>
-            )}
-            <div className="actions" style={{ marginTop: '1.5rem' }}>
-              <Link to="/models" className="btn-link">📂 Przeglądaj modele</Link><br />
-              <Link to="/models/new" className="btn-link">➕ Utwórz nowy model</Link><br />
-              <Link to="/settings" className="btn-link">⚙ Ustawienia</Link>
+            <div className="mb-3">
+              <p className="mb-1">
+                <i className="bi bi-box me-2"></i>
+                Masz <strong>{models.length}</strong> modeli.
+              </p>
+              {models.length > 0 && (
+                <p className="mb-3">
+                  <i className="bi bi-clock me-2"></i>
+                  Ostatni model: <strong>{models[models.length - 1].name}</strong>
+                </p>
+              )}
+            </div>
+
+            <div className="d-grid gap-2 d-md-block">
+              <Link to="/models" className="btn btn-outline-primary me-2">
+                <i className="bi bi-folder2-open me-1"></i>Przeglądaj modele
+              </Link>
+              <Link to="/models/new" className="btn btn-outline-success me-2">
+                <i className="bi bi-plus me-1"></i>Utwórz nowy model
+              </Link>
+              <Link to="/settings" className="btn btn-outline-dark">
+                <i className="bi bi-gear me-1"></i>Ustawienia
+              </Link>
             </div>
           </>
         )}
 
-        {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
+        {error && (
+          <div className="alert alert-danger mt-4" role="alert">
+            {error}
+          </div>
+        )}
       </div>
     </div>
-  )
+  );
 }

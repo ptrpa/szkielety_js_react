@@ -1,46 +1,55 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { getModelById } from '../api/models'
-import useAuth from '../hooks/useAuth'
+// src/pages/ModelViewPage.js
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { getModelById } from '../api/models';
+import useAuth from '../hooks/useAuth';
 
 export default function ModelViewPage() {
-  const { id } = useParams()
-  const { user } = useAuth()
-  const [model, setModel] = useState(null)
-  const [error, setError] = useState(null)
+  const { id } = useParams();
+  const { user } = useAuth();
+  const [model, setModel] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchModel = async () => {
       try {
-        const data = await getModelById(id)
-        setModel(data)
+        const data = await getModelById(id);
+        setModel(data);
       } catch (err) {
-        setError('Nie udało się pobrać modelu')
+        setError('Nie udało się pobrać modelu');
       }
-    }
-    fetchModel()
-  }, [id])
+    };
+    fetchModel();
+  }, [id]);
 
-  if (error) return <p style={{ color: 'red' }}>{error}</p>
-  if (!model) return <p>Ładowanie...</p>
+  if (error) {
+    return <div className="alert alert-danger my-4">{error}</div>;
+  }
+
+  if (!model) {
+    return <div className="text-center my-4">Ładowanie...</div>;
+  }
 
   return (
-    <div className="container" style={{ maxWidth: '800px', margin: '2rem auto' }}>
-      <div style={{ marginBottom: '1rem' }}>
-        <Link to={user?.role === 'admin' ? "/admin/models" : "/models"} className="btn-link">
-          ⬅ Powrót do listy modeli
+    <div className="container my-5" style={{ maxWidth: '800px' }}>
+      <div className="mb-3">
+        <Link
+          to={user?.role === 'admin' ? "/admin/models" : "/models"}
+          className="btn btn-outline-secondary btn-sm"
+        >
+          <i className="bi bi-arrow-left me-1"></i> Powrót do listy modeli
         </Link>
       </div>
 
-      <div className="card" style={{ padding: '2rem', border: '1px solid #ddd', borderRadius: '8px' }}>
-        <h2 style={{ marginBottom: '1rem' }}>{model.name}</h2>
+      <div className="card shadow-sm p-4">
+        <h2 className="mb-4">{model.name}</h2>
 
         <p><strong>Opis:</strong> {model.description}</p>
         <p><strong>Zmienne:</strong> {model.variables.join(', ')}</p>
 
-        <div>
+        <div className="mb-3">
           <strong>Równania:</strong>
-          <ul>
+          <ul className="mt-2">
             {Object.entries(model.equations).map(([k, v]) => (
               <li key={k}>{k}′ = {v}</li>
             ))}
@@ -51,5 +60,5 @@ export default function ModelViewPage() {
         <p><strong>Warunki początkowe:</strong> {JSON.stringify(model.initialConditions)}</p>
       </div>
     </div>
-  )
+  );
 }
