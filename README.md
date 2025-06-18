@@ -109,6 +109,8 @@ Aplikacja frontendowa domyślnie działa na `http://localhost:3000`, a backend n
 ---
 ## Testy backendu w postmanie
 
+![testy w postmanie](image-15.png)
+
 - rejestracja
 ![poprawna rejestracja](image-1.png)
 ![uzytkownik juz istnieje](image.png)
@@ -122,5 +124,17 @@ Aplikacja frontendowa domyślnie działa na `http://localhost:3000`, a backend n
 ![info o sobie](image-5.png)
 
 - update uzytkownika
-![proba zmiany innego uzytkownika niebedac adminem](image-6.png)
 ![zmiana swojego hasla](image-7.png)
+![bledne aktualne haslo](image-10.png)
+![niewystarczajace nowe haslo](image-11.png)
+
+- proby zmian innych bez posiadania uprawnien admina
+![proba zmiany innego uzytkownika niebedac adminem](image-6.png)
+![proba usuniecia innego uzytkownika niebedac adminem](image-8.png)
+![lista uzytkownikow niebedac adminem](image-9.png)
+
+- zmiany innych posiadajac uprawnienia admina
+![lista uzytkownikow](image-16.png)
+![poprawna zmiana maila uzytkownika jako admin](image-13.png)
+![nieudana zmiana bo uzytkownik o takim mailu istnieje](image-12.png)
+![usuniecie uzytkownika jako admin](image-14.png)
